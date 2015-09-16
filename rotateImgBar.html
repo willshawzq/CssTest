@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>rotateImgBar</title>
+	<style>
+	.banner {width: 800px; margin: 0 auto; perspective: 800px;/*  perspective-origin: right; */}
+	.banner,
+	.banner * {
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+		        box-sizing: border-box;}
+	.banner ul {display: inline-block; height: 360px; margin: 0; padding: 0; list-style: none;}
+	.banner ul > li {position: relative; float: left; width: 200px; height: 100%; transform-style: preserve-3d; transform: translateZ(-180px);}
+	.banner ul > li > div {position: absolute; width: 100%; height: 100%; background-color: transparent}
+	.banner ul > li > div:nth-child(1) {bottom: 100%; transform: translateZ(180px) rotateX(90deg); transform-origin: bottom; background-image: url(../img/1.png);}
+	.banner ul > li > div:nth-child(2) {top: 100%; transform: translateZ(180px) rotateX(-90deg); transform-origin: top; background-image: url(../img/2.png);}
+	.banner ul > li > div:nth-child(3) {transform: translateZ(180px); background-image: url(../img/3.png);}
+	.banner ul > li > div:nth-child(4) {transform: translateZ(-180px) rotateX(180deg); background-image: url(../img/4.png);}
+	.banner ul > li > div:nth-child(5) {width: 360px; right: 100%; transform: translateZ(180px) rotateY(-90deg); transform-origin: right;}
+	.banner ul > li > div:nth-child(6) {width: 360px; left: 100%; transform: translateZ(180px) rotateY(90deg); transform-origin: left;}
+
+	.banner ul > li:nth-child(1) > div {background-position: 0;}
+	.banner ul > li:nth-child(2) > div {background-position: -200px;}
+	.banner ul > li:nth-child(3) > div {background-position: -400px;}
+	.banner ul > li:nth-child(4) > div {background-position: -600px;}
+	.banner ul > li:last-child {z-index: -1;}
+	.banner ul > li:nth-child(1) {transition: all .8s;}
+	.banner ul > li:nth-child(2) {transition: all .8s .2s;}
+	.banner ul > li:nth-child(3) {transition: all .8s .4s;}
+	.banner ul > li:nth-child(4) {transition: all .8s .6s;}
+
+	.banner ol {position: fixed; top: 330px; right: 15px; color: #fff; list-style: none; margin: 0; padding: 0;}
+	.banner ol li {display: inline-block; width: 20px; height: 20px; border-radius: 50%; text-align: center; background-color: gray;}
+	.banner ol li:hover,
+	.banner ol li.current {cursor: pointer; background-color: red;}
+	</style>
+</head>
+<body>
+	<div class="banner">
+		<ul>
+			<li>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</li>
+			<li>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</li>
+			<li>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</li>
+			<li>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</li>
+		</ul>
+		<ol>
+			<li>1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+		</ol>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script>
+	$(function(){
+		$(".banner ol li").on("click", function() {
+			var index = $(this).index();
+			$(this).addClass("current").siblings(".current").removeClass("current");
+			$(this).parents(".banner").find("ul li").css({
+				"transform": "translateZ(-180px) rotateX(-"+(index+1)*90+"deg)"
+			});
+		});
+	});
+	</script>
+</body>
+</html>

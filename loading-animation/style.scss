@@ -1,0 +1,71 @@
+$size:200px;
+$animTime:2s;
+$fgColor:#4b86db;
+$bgColor:#89abdd;
+
+@mixin loading($size:30px, $animTime: 1s) {
+	%halfPiece {
+		position: absolute;
+		width: $size / 2;
+		height: $size;
+	}
+	$radius: $size / 2;
+	
+	position: relative;
+	display: inline-block;
+	width: $size;
+	height: $size;
+	border-radius: 50%;
+	overflow: hidden;
+
+	.spin {
+		@extend %halfPiece;
+		z-index: 2;
+		transform-origin: right center;
+		animation: spin $animTime/2 infinite linear;
+		i {
+			display: block;
+			height: 100%;
+			border-radius: $radius 0 0 $radius;
+			animation: spinI $animTime steps(1, end) infinite;
+		}
+	}
+	.left {
+		@extend %halfPiece;
+		z-index: 3;
+		border-radius: $radius 0 0 $radius;
+		animation: left $animTime steps(1, end)  infinite;
+	}
+	.right {
+		@extend %halfPiece; 
+		right: 0;
+		z-index: 3;
+		border-radius: 0 $radius $radius 0;
+		animation: right $animTime steps(1, end) infinite;
+	}
+}
+.loading {
+	@include loading($size, $animTime);
+}
+@keyframes spin {
+	0%{transform:rotate(360deg);}
+	100%{transform:rotate(0deg);}
+}
+@keyframes spinI {
+	0%{background:$fgColor;}
+	25%{background:$fgColor;}
+	50%{background:$bgColor;}
+	75%{background:$bgColor;}
+}
+@keyframes left {
+	0%{background:$bgColor;z-index:1;}
+	25%{background:$bgColor;z-index:3;}
+	50%{background:$fgColor;z-index:1;}
+	75%{background:$fgColor;z-index:3;}
+}
+@keyframes right {
+	0%{background:$fgColor;z-index:3;}
+	25%{background:$bgColor;z-index:1;}
+	50%{background:$bgColor;z-index:3;}
+	75%{background:$fgColor;z-index:1;}
+}

@@ -1,51 +1,98 @@
-$size:200px;
-$animTime:2s;
+$innerSize:60px;
+$outerSize:80px;
 $fgColor:#4b86db;
 $bgColor:#89abdd;
-
-@mixin loading($size:30px, $animTime: 1s) {
-	%halfPiece {
+@mixin linearGradient($dir, $start, $end) {
+	background-image: -webkit-linear-gradient($dir, $start, $end);
+	background-image: -moz-linear-gradient($dir, $start, $end);
+	background-image: -ms-linear-gradient($dir, $start, $end);
+	background-image: -o-linear-gradient($dir, $start, $end);
+	background-image: linear-gradient($dir, $start, $end);
+}
+@mixin loading($outerSize: 65px, $innerSize:38px, $animTime: 2s,
+	$fgColor: #4b86db, $bgColor:#89abdd, $startColor1: #cce9de, $endColor1: #fff,
+	$startColor2: #cce9de, $endColor2: #84cbb1) {
+	$outerRadius: $outerSize / 2;
+	$innerRadius: $innerSize / 2;
+	$gap: round(( $outerSize - $innerSize ) / 2);
+	%halfInnerPiece {
 		position: absolute;
-		width: $size / 2;
-		height: $size;
+		display: inline-block;
+		content: " ";
+		width: $innerRadius;
+		height: $innerSize;
+		top: $gap;
 	}
-	$radius: $size / 2;
+	%halfOutterPiece {
+		position: absolute;
+		display: inline-block;
+		content: " ";
+		width: $outerRadius;
+		height: $outerSize;
+	}
 	
 	position: relative;
 	display: inline-block;
-	width: $size;
-	height: $size;
+	width: $outerSize;
+	height: $outerSize;
 	border-radius: 50%;
 	overflow: hidden;
 
-	.spin {
-		@extend %halfPiece;
-		z-index: 2;
-		transform-origin: right center;
+	.outer {
+		position: relative; 
+		width: $outerSize; height: $outerSize; 
+		border-radius: 50%;
 		animation: spin $animTime/2 infinite linear;
+		&::before {
+			@extend %halfOutterPiece;
+		    background: #fff;
+			left: 0; 
+			border-radius: $outerRadius 0 0 $outerRadius;
+			@include linearGradient(bottom, $startColor1 0%, $endColor1 100%);
+		}
+		&::after {
+			@extend %halfOutterPiece;
+		    background: #fff;
+			right: 0; 
+			border-radius: 0 $outerRadius $outerRadius 0;
+			@include linearGradient(bottom, $startColor2 0%, $endColor2 100%);
+		}
 		i {
-			display: block;
-			height: 100%;
-			border-radius: $radius 0 0 $radius;
-			animation: spinI $animTime steps(1, end) infinite;
+			position: absolute; z-index: 2;
+			top: 0; bottom: 0; left: 0; right: 0;
+			width: $outerSize - 10px; height: $outerSize - 10px;
+			margin: auto;
+			border-radius: 50%;
+			background-color: #fff;
 		}
 	}
-	.left {
-		@extend %halfPiece;
-		z-index: 3;
-		border-radius: $radius 0 0 $radius;
-		animation: left $animTime steps(1, end)  infinite;
-	}
-	.right {
-		@extend %halfPiece; 
-		right: 0;
-		z-index: 3;
-		border-radius: 0 $radius $radius 0;
-		animation: right $animTime steps(1, end) infinite;
+	.spin {
+		@extend %halfInnerPiece;
+		left: $gap;
+		i {
+			position: absolute; z-index: 2;
+			display: block;
+			width: 100%; height: 100%;
+			border-radius: $innerRadius 0 0 $innerRadius;
+			transform-origin: right center;
+			animation: spinI $animTime steps(1, end) infinite,spin $animTime/2 infinite linear;
+		}
+		&::before {
+			@extend %halfInnerPiece;
+			left: 0; top:0; z-index: 3;
+			border-radius: $innerRadius 0 0 $innerRadius;
+			animation: left $animTime steps(1, end)  infinite;
+		}
+		&::after {
+			@extend %halfInnerPiece;
+			left: 100%; top:0; z-index: 3;
+			border-radius: 0 $innerRadius $innerRadius 0;
+			animation: right $animTime steps(1, end) infinite;
+		}
 	}
 }
 .loading {
-	@include loading($size, $animTime);
+	@include loading($outerSize, $innerSize);
 }
 @keyframes spin {
 	0%{transform:rotate(360deg);}
